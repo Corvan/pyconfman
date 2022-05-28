@@ -1,65 +1,19 @@
 import os.path
-import shutil
 
 import pyconf
 import pytest
-
-PREFIX = "/tmp/pyconf"
-SOURCE_PATH = f"{PREFIX}/source"
-DESTINATION_PATH = f"{PREFIX}/destination"
-
-
-@pytest.fixture
-def prefix():
-    if not os.path.exists(PREFIX):
-        os.mkdir(PREFIX)
-    yield
-    if os.path.exists(PREFIX):
-        shutil.rmtree(PREFIX)
-
-
-@pytest.fixture
-def source_file(prefix):
-    with open(SOURCE_PATH, "w") as source:
-        source.writelines(["test"])
-    yield SOURCE_PATH
-    if os.path.exists(SOURCE_PATH):
-        os.remove(SOURCE_PATH)
-
-
-@pytest.fixture
-def source_directory(prefix):
-    os.mkdir(SOURCE_PATH)
-    with open(f"{SOURCE_PATH}/source", "w") as source:
-        source.writelines(["test"])
-    yield SOURCE_PATH
-    for dir_path, dir_names, file_names in os.walk(SOURCE_PATH):
-        for filename in file_names:
-            os.remove(f"{SOURCE_PATH}/{filename}")
-    os.rmdir(f"{SOURCE_PATH}")
-
-
-@pytest.fixture
-def destination_file(prefix):
-    with open(DESTINATION_PATH, "w") as destination:
-        destination.writelines(["test"])
-    yield DESTINATION_PATH
-    os.remove(DESTINATION_PATH)
-
-
-@pytest.fixture
-def destination_directory(prefix):
-    os.mkdir(DESTINATION_PATH)
-    yield DESTINATION_PATH
-    for dir_path, dir_names, file_names in os.walk(DESTINATION_PATH):
-        for filename in file_names:
-            os.remove(f"{DESTINATION_PATH}/{filename}")
-    os.rmdir(DESTINATION_PATH)
+from test.fixtures_copy import (
+    prefix,
+    source_file,
+    destination_file,
+    source_directory,
+    destination_directory,
+)
 
 
 def test_source_file_to_destination_file(source_file, destination_file):
     with pytest.raises(OSError) as exc_info:
-        pyconf.copy(SOURCE_PATH, DESTINATION_PATH)
+        pyconf.copy(source_file, destination_file)
     assert exc_info.type == OSError
     assert (
         exc_info.value.args[0]
@@ -68,29 +22,31 @@ def test_source_file_to_destination_file(source_file, destination_file):
 
 
 def test_source_file_to_destination_file_with_overwrite(source_file, destination_file):
-    pyconf.copy(SOURCE_PATH, DESTINATION_PATH, overwrite=True)
+    pyconf.copy(source_file, destination_file, overwrite=True)
 
-    assert os.path.exists(DESTINATION_PATH)
-    assert os.path.isfile(SOURCE_PATH)
+    assert os.path.exists(destination_file)
+    assert os.path.isfile(source_file)
 
-    with open(DESTINATION_PATH, "r") as destination:
+    with open(destination_file, "r") as destination:
         assert destination.readlines()[0] == "test"
 
 
 def test_source_file_to_destination_directory(source_file, destination_directory):
-    pyconf.copy(SOURCE_PATH, DESTINATION_PATH)
+    pyconf.copy(source_file, destination_directory)
 
-    assert os.path.exists(DESTINATION_PATH)
-    assert os.path.isdir(DESTINATION_PATH)
-    assert os.path.exists(f"{DESTINATION_PATH}/{os.path.split(SOURCE_PATH)[-1]}")
+    assert os.path.exists(destination_directory)
+    assert os.path.isdir(destination_directory)
+    assert os.path.exists(f"{destination_directory}/{os.path.split(source_file)[-1]}")
 
-    with open(f"{DESTINATION_PATH}/{os.path.split(SOURCE_PATH)[-1]}") as destination:
+    with open(
+        f"{destination_directory}/{os.path.split(source_file)[-1]}"
+    ) as destination:
         destination.readlines()[0] = "test"
 
 
 def test_source_directory_to_destination_file(source_directory, destination_file):
     with pytest.raises(OSError) as exc_info:
-        pyconf.copy(SOURCE_PATH, DESTINATION_PATH)
+        pyconf.copy(source_directory, destination_file)
     assert exc_info.type == OSError
     assert (
         exc_info.value.args[0]
