@@ -52,6 +52,9 @@ def destination_directory(prefix):
     destination_path = pathlib.Path(DESTINATION_PATH)
     destination_path.mkdir()
     yield destination_path
-    for child in destination_path.iterdir():
-        child.unlink()
-    destination_path.rmdir()
+    if destination_path.is_dir():
+        for child in destination_path.iterdir():
+            child.unlink()
+        destination_path.rmdir()
+    elif destination_path.is_file():
+        destination_path.unlink()
