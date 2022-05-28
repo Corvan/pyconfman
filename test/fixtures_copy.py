@@ -21,7 +21,7 @@ def prefix():
 @pytest.fixture
 def source_file(prefix):
     source_path = pathlib.Path(SOURCE_PATH)
-    source_path.write_text("test", newline="\n")
+    source_path.write_text("test")
     yield source_path
     if source_path.exists():
         source_path.unlink()
@@ -32,7 +32,7 @@ def source_directory(prefix):
     source_path = pathlib.Path(SOURCE_PATH)
     source_path.mkdir()
     source_file = source_path / source_path.name
-    source_file.write_text("test", newline="\n")
+    source_file.write_text("test")
     yield source_path
     for children in source_path.iterdir():
         children.unlink()
@@ -42,7 +42,7 @@ def source_directory(prefix):
 @pytest.fixture
 def destination_file(prefix):
     destination_path = pathlib.Path(DESTINATION_PATH)
-    destination_path.write_text("test", newline="\n")
+    destination_path.write_text("test")
     yield destination_path
     destination_path.unlink()
 
