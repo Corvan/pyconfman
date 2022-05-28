@@ -27,4 +27,4 @@ The scripts are meant to be declarative, but with a clear and easy way of using 
 
 Getting Started
 ---------------
-The only thing existing yet is a function to copy files locally. Have a look at `copy.py <https://github.com/Corvan/pyconfman/blob/e0edc94fa08bc315db9dcf41e3987c35b0d15117/pyconfman/copy.py#L110>`_.
+The only thing existing yet is a function to copy files locally. Have a look at `copy.py <https://github.com/Corvan/pyconfman/blob/e0edc94fa08bc315db9dcf41e3987c35b0d15117/pyconfman/copy.py#L110>`_ or how it is used in its`tests <https://github.com/Corvan/pyconfman/blob/main/test/test_copy.py>`_
