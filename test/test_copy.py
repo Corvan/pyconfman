@@ -29,7 +29,14 @@ def source_file(prefix):
 
 @pytest.fixture
 def source_directory(prefix):
-    pass
+    os.mkdir(SOURCE_PATH)
+    with open(f"{SOURCE_PATH}/source", "w") as source:
+        source.writelines(["test"])
+    yield SOURCE_PATH
+    for dir_path, dir_names, file_names in os.walk(SOURCE_PATH):
+        for filename in file_names:
+            os.remove(f"{SOURCE_PATH}/{filename}")
+    os.rmdir(f"{SOURCE_PATH}")
 
 
 @pytest.fixture
@@ -67,3 +74,13 @@ def test_source_file_to_destination_directory(source_file, destination_directory
 
     with open(f"{DESTINATION_PATH}/{os.path.split(SOURCE_PATH)[-1]}") as destination:
         destination.readlines()[0] = "test"
+
+
+def test_source_directory_to_destination_file(source_directory, destination_file):
+    with pytest.raises(OSError) as exc_info:
+        pyconf.copy(SOURCE_PATH, DESTINATION_PATH)
+    assert exc_info.type == OSError
+    assert (
+        exc_info.value.args[0]
+        == "destination already exists, and overwrite has not been chosen"
+    )
