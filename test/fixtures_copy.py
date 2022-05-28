@@ -3,7 +3,7 @@ import shutil
 
 import pytest
 
-PREFIX = "/tmp/pyconf"
+PREFIX = "/tmp/pyconfman"
 SOURCE_PATH = f"{PREFIX}/source"
 DESTINATION_PATH = f"{PREFIX}/destination"
 
