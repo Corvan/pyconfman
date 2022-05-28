@@ -41,7 +41,9 @@ def source_directory(prefix):
 
 @pytest.fixture
 def destination_file(prefix):
-    yield
+    with open(DESTINATION_PATH, "w") as destination:
+        destination.writelines(["test"])
+    yield DESTINATION_PATH
     os.remove(DESTINATION_PATH)
 
 
