@@ -48,9 +48,9 @@ def destination_file(prefix):
 @pytest.fixture
 def destination_directory(prefix):
     os.mkdir(DESTINATION_PATH)
-    yield
-    for dirpath, dirnames, filenames in os.walk(DESTINATION_PATH):
-        for filename in filenames:
+    yield DESTINATION_PATH
+    for dir_path, dir_names, file_names in os.walk(DESTINATION_PATH):
+        for filename in file_names:
             os.remove(f"{DESTINATION_PATH}/{filename}")
     os.rmdir(DESTINATION_PATH)
 
