@@ -1,1 +1,7 @@
-from .copy import copy
+from .copy import (
+    copy,
+    SourceDoesNotExistError,
+    SourceMustBeDirectoryOrFileError,
+    DestinationExistsError,
+    DestinationDoesNotExistError,
+)

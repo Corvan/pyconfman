@@ -6,6 +6,26 @@ import shutil
 from shutil import SameFileError
 
 
+class SourceDoesNotExistError(OSError):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class SourceMustBeDirectoryOrFileError(OSError):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class DestinationExistsError(OSError):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
+class DestinationDoesNotExistError(OSError):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+
 class Resource(abc.ABC):
     def __init__(self, path: pathlib.Path | str):
         self._path: pathlib.Path = None
@@ -57,11 +77,11 @@ class Copy:
 
     def copy(self):
         if not self.source.path.exists():
-            raise OSError("source does not exist")
+            raise SourceDoesNotExistError("source does not exist")
         if self.destination.path.exists():
             if self.destination.path.is_file():
                 if not self.destination.overwrite:
-                    raise OSError(
+                    raise DestinationExistsError(
                         "destination already exists, and overwrite has not been chosen"
                     )
                 os.remove(self.destination.path)
@@ -70,7 +90,7 @@ class Copy:
                     shutil.rmtree(self.destination.path)
         else:
             if not self.destination.create:
-                raise OSError(
+                raise DestinationDoesNotExistError(
                     "destination does not exist, and create has not been chosen"
                 )
 
@@ -82,7 +102,9 @@ class Copy:
             except SameFileError:
                 pass
         else:
-            raise OSError("source must be either file or directory")
+            raise SourceMustBeDirectoryOrFileError(
+                "source must be either file or directory"
+            )
 
 
 def copy(
@@ -93,6 +115,17 @@ def copy(
 ):
     """
     copy a resource (file or directory)
+
+
+    :parameter source: the source (file or directory) to copy from
+    :parameter destination: the destination (file or directory) to copy to
+    :parameter create: create the destination if it does not exist
+    :parameter overwrite: overwrite the destination if it exists
+    :raises SourceDoesNotExistError: when source does not exist
+    :raises SourceMustBeDirectoryOrFileError: when source is not a file or directory
+    :raises DestinationExistsError: when destination exists and overwrite is False
+    :raises DestinationDoesNotExistError: when create is False and destination does not
+            exist
     """
 
     Copy(source, destination, create, overwrite).copy()
