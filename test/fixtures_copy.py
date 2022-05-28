@@ -1,4 +1,4 @@
-import os
+import pathlib
 import shutil
 
 import pytest
@@ -10,47 +10,48 @@ DESTINATION_PATH = f"{PREFIX}/destination"
 
 @pytest.fixture
 def prefix():
-    if not os.path.exists(PREFIX):
-        os.mkdir(PREFIX)
-    yield prefix
-    if os.path.exists(PREFIX):
-        shutil.rmtree(PREFIX)
+    prefix_path = pathlib.Path(PREFIX)
+    if not prefix_path.exists():
+        prefix_path.mkdir()
+    yield prefix_path
+    if prefix_path.exists():
+        shutil.rmtree(prefix_path)
 
 
 @pytest.fixture
 def source_file(prefix):
-    with open(SOURCE_PATH, "w") as source:
-        source.writelines(["test"])
-    yield SOURCE_PATH
-    if os.path.exists(SOURCE_PATH):
-        os.remove(SOURCE_PATH)
+    source_path = pathlib.Path(SOURCE_PATH)
+    source_path.write_text("test", newline="\n")
+    yield source_path
+    if source_path.exists():
+        source_path.unlink()
 
 
 @pytest.fixture
 def source_directory(prefix):
-    os.mkdir(SOURCE_PATH)
-    with open(f"{SOURCE_PATH}/source", "w") as source:
-        source.writelines(["test"])
-    yield SOURCE_PATH
-    for dir_path, dir_names, file_names in os.walk(SOURCE_PATH):
-        for filename in file_names:
-            os.remove(f"{SOURCE_PATH}/{filename}")
-    os.rmdir(f"{SOURCE_PATH}")
+    source_path = pathlib.Path(SOURCE_PATH)
+    source_path.mkdir()
+    source_file = source_path / source_path.name
+    source_file.write_text("test", newline="\n")
+    yield source_path
+    for children in source_path.iterdir():
+        children.unlink()
+    source_path.rmdir()
 
 
 @pytest.fixture
 def destination_file(prefix):
-    with open(DESTINATION_PATH, "w") as destination:
-        destination.writelines(["test"])
-    yield DESTINATION_PATH
-    os.remove(DESTINATION_PATH)
+    destination_path = pathlib.Path(DESTINATION_PATH)
+    destination_path.write_text("test", newline="\n")
+    yield destination_path
+    destination_path.unlink()
 
 
 @pytest.fixture
 def destination_directory(prefix):
-    os.mkdir(DESTINATION_PATH)
-    yield DESTINATION_PATH
-    for dir_path, dir_names, file_names in os.walk(DESTINATION_PATH):
-        for filename in file_names:
-            os.remove(f"{DESTINATION_PATH}/{filename}")
-    os.rmdir(DESTINATION_PATH)
+    destination_path = pathlib.Path(DESTINATION_PATH)
+    destination_path.mkdir()
+    yield destination_path
+    for child in destination_path.iterdir():
+        child.unlink()
+    destination_path.rmdir()
