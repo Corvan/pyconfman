@@ -56,7 +56,17 @@ def destination_directory(prefix):
 
 
 def test_source_file_to_destination_file(source_file, destination_file):
-    pyconf.copy(SOURCE_PATH, DESTINATION_PATH)
+    with pytest.raises(OSError) as exc_info:
+        pyconf.copy(SOURCE_PATH, DESTINATION_PATH)
+    assert exc_info.type == OSError
+    assert (
+        exc_info.value.args[0]
+        == "destination already exists, and overwrite has not been chosen"
+    )
+
+
+def test_source_file_to_destination_file_with_overwrite(source_file, destination_file):
+    pyconf.copy(SOURCE_PATH, DESTINATION_PATH, overwrite=True)
 
     assert os.path.exists(DESTINATION_PATH)
     assert os.path.isfile(SOURCE_PATH)
