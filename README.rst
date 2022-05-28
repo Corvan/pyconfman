@@ -24,3 +24,7 @@ Motivation
 ---------
 Everything should be written in pure Python and offer Python objects to be used in Python scripts.
 The scripts are meant to be declarative, but with a clear and easy way of using Python's syntax to do one task at a time and per line or block of code.
+
+Getting Started
+---------------
+The only thing existing yet is a function to copy files locally. Have a look at `copy.py <https://github.com/Corvan/pyconfman/blob/e0edc94fa08bc315db9dcf41e3987c35b0d15117/pyconfman/copy.py#L110>`_.
