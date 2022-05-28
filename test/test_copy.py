@@ -22,7 +22,7 @@ def prefix():
 def source_file(prefix):
     with open(SOURCE_PATH, "w") as source:
         source.writelines(["test"])
-    yield
+    yield SOURCE_PATH
     if os.path.exists(SOURCE_PATH):
         os.remove(SOURCE_PATH)
 
