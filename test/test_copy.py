@@ -1,4 +1,3 @@
-import pathlib
 import pyconfman
 import pytest
 from test.fixtures_copy import (
@@ -43,7 +42,10 @@ def test_source_file_to_destination_directory(source_file, destination_directory
 def test_source_file_to_destination_directory_with_overwrite(
     source_file, destination_directory
 ):
-    pass
+    pyconfman.copy(source_file, destination_directory, overwrite=True)
+    assert destination_directory.exists()
+    assert destination_directory.is_file()
+    assert destination_directory.read_text() == "test"
 
 
 def test_source_directory_to_destination_file(source_directory, destination_file):
