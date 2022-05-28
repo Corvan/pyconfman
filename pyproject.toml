@@ -1,0 +1,62 @@
+[project]
+name = "pyconfman"
+version = "0.0.1"
+description = "A pure Python configuration manager"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = "LGPL-3.0-or-later"
+keywords = ["configuration", "management"]
+authors = [
+  {email = "corvan@gmx.de"},
+  {name = "Lars Liedtke"}
+]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+dependencies = [
+
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest",
+  "coverage",
+  "pytest-cov"
+]
+
+[project.urls]
+homepage = "example.com"
+documentation = "readthedocs.org"
+repository = "github.com"
+changelog = "github.com/me/spam/blob/master/CHANGELOG.md"
+
+[project.scripts]
+spam-cli = "spam:main_cli"
+
+[project.gui-scripts]
+spam-gui = "spam:main_gui"
+
+[project.entry-points."spam.magical"]
+tomatoes = "spam:main_tomatoes"
+
+[tool.poetry]
+name = "pyconfman"
+version = "0.0.1"
+description = "A pure Python configuration manager"
+authors = ["Lars Liedtke <corvan@gmx.de>"]
+license = "LGPL-3.0-or-later"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+coverage = "^6.4"
+pytest-cov = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
