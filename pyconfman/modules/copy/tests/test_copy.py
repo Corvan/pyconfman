@@ -1,16 +1,17 @@
 import pathlib
 
-import pyconfman
+import pyconfman.modules
 import pytest
 
-from test.fixtures_copy import (
-    prefix,
-    source_file,
-    destination_file,
-    source_directory,
-    destination_directory,
+import pyconfman.modules.copy.src.exceptions
+from pyconfman.modules.copy.tests.fixtures import (
     SOURCE_PATH,
     DESTINATION_PATH,
+    prefix,
+    source_file,
+    source_directory,
+    destination_file,
+    destination_directory,
 )
 
 
@@ -18,7 +19,7 @@ def test_source_file_to_destination_file(source_file):
     destination_file = pathlib.Path(DESTINATION_PATH)
     assert not destination_file.exists()
 
-    pyconfman.copy(source_file, destination_file)
+    pyconfman.modules.copy.copy(source_file, destination_file)
 
     assert destination_file.exists()
     assert destination_file.read_text() == "test"
@@ -26,10 +27,10 @@ def test_source_file_to_destination_file(source_file):
 
 
 def test_source_file_to_destination_file_create_false(source_file, destination_file):
-    with pytest.raises(pyconfman.DestinationExistsError) as exc_info:
-        pyconfman.copy(source_file, destination_file, create=False)
+    with pytest.raises(pyconfman.modules.copy.DestinationExistsError) as exc_info:
+        pyconfman.modules.copy.copy(source_file, destination_file, create=False)
 
-    assert exc_info.type == pyconfman.DestinationExistsError
+    assert exc_info.type == pyconfman.modules.copy.DestinationExistsError
     assert (
         exc_info.value.args[0]
         == "destination already exists, and overwrite has not been chosen"
@@ -37,7 +38,7 @@ def test_source_file_to_destination_file_create_false(source_file, destination_f
 
 
 def test_source_file_to_destination_file_with_overwrite(source_file, destination_file):
-    pyconfman.copy(source_file, destination_file, overwrite=True)
+    pyconfman.modules.copy.copy(source_file, destination_file, overwrite=True)
 
     assert destination_file.exists()
     assert source_file.is_file()
@@ -50,15 +51,15 @@ def test_source_not_existing(destination_file):
 
     assert not source_file.exists()
 
-    with pytest.raises(pyconfman.SourceDoesNotExistError) as exc_info:
-        pyconfman.copy(source_file, destination_file)
+    with pytest.raises(pyconfman.modules.copy.SourceDoesNotExistError) as exc_info:
+        pyconfman.modules.copy.copy(source_file, destination_file)
 
-    assert exc_info.type == pyconfman.SourceDoesNotExistError
+    assert exc_info.type == pyconfman.modules.copy.SourceDoesNotExistError
     assert exc_info.value.args[0] == "source does not exist"
 
 
 def test_source_file_to_destination_directory(source_file, destination_directory):
-    pyconfman.copy(source_file, destination_directory)
+    pyconfman.modules.copy.copy(source_file, destination_directory)
 
     assert destination_directory.exists()
     assert destination_directory.is_dir()
@@ -72,10 +73,10 @@ def test_source_file_to_destination_directory_create_false(source_file):
     destination_directory = pathlib.Path(DESTINATION_PATH)
     assert not destination_directory.exists()
 
-    with pytest.raises(pyconfman.DestinationDoesNotExistError) as exc_info:
-        pyconfman.copy(source_file, destination_directory, create=False)
+    with pytest.raises(pyconfman.modules.copy.DestinationDoesNotExistError) as exc_info:
+        pyconfman.modules.copy.copy(source_file, destination_directory, create=False)
 
-    assert exc_info.type == pyconfman.DestinationDoesNotExistError
+    assert exc_info.type == pyconfman.modules.copy.DestinationDoesNotExistError
     assert (
         exc_info.value.args[0]
         == "destination does not exist, and create has not been chosen"
@@ -85,7 +86,7 @@ def test_source_file_to_destination_directory_create_false(source_file):
 def test_source_file_to_destination_directory_with_overwrite(
     source_file, destination_directory
 ):
-    pyconfman.copy(source_file, destination_directory, overwrite=True)
+    pyconfman.modules.copy.copy(source_file, destination_directory, overwrite=True)
 
     assert destination_directory.exists()
     assert destination_directory.is_file()
@@ -93,10 +94,10 @@ def test_source_file_to_destination_directory_with_overwrite(
 
 
 def test_source_directory_to_destination_file(source_directory, destination_file):
-    with pytest.raises(pyconfman.DestinationExistsError) as exc_info:
-        pyconfman.copy(source_directory, destination_file)
+    with pytest.raises(pyconfman.modules.copy.DestinationExistsError) as exc_info:
+        pyconfman.modules.copy.copy(source_directory, destination_file)
 
-    assert exc_info.type == pyconfman.DestinationExistsError
+    assert exc_info.type == pyconfman.modules.copy.DestinationExistsError
     assert (
         exc_info.value.args[0]
         == "destination already exists, and overwrite has not been chosen"
@@ -106,7 +107,7 @@ def test_source_directory_to_destination_file(source_directory, destination_file
 def test_source_directory_to_destination_file_with_overwrite(
     source_directory, destination_file
 ):
-    pyconfman.copy(source_directory, destination_file, overwrite=True)
+    pyconfman.modules.copy.copy(source_directory, destination_file, overwrite=True)
 
     assert destination_file.is_dir()
     assert (destination_file / source_directory.name).exists()

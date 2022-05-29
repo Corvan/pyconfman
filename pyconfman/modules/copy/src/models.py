@@ -1,28 +1,16 @@
 from __future__ import annotations
+
 import abc
 import pathlib
 import shutil
 from shutil import SameFileError
 
-
-class SourceDoesNotExistError(OSError):
-    def __init__(self, message: str):
-        super().__init__(message)
-
-
-class SourceMustBeDirectoryOrFileError(OSError):
-    def __init__(self, message: str):
-        super().__init__(message)
-
-
-class DestinationExistsError(OSError):
-    def __init__(self, message: str):
-        super().__init__(message)
-
-
-class DestinationDoesNotExistError(OSError):
-    def __init__(self, message: str):
-        super().__init__(message)
+from pyconfman.modules.copy.src.exceptions import (
+    SourceDoesNotExistError,
+    DestinationExistsError,
+    DestinationDoesNotExistError,
+    SourceMustBeDirectoryOrFileError,
+)
 
 
 class Resource(abc.ABC):
@@ -113,28 +101,3 @@ class Copy:
             raise SourceMustBeDirectoryOrFileError(
                 "source must be either file or directory"
             )
-
-
-def copy(
-    source: str | pathlib.Path,
-    destination: str | pathlib.Path,
-    create: bool = True,
-    overwrite: bool = False,
-):
-    """
-    copy a resource (file or directory)
-
-
-
-    :parameter source: the source (file or directory) to copy from
-    :parameter destination: the destination (file or directory) to copy to
-    :parameter create: create the destination if it does not exist
-    :parameter overwrite: overwrite the destination if it exists
-    :raises SourceDoesNotExistError: when source does not exist
-    :raises SourceMustBeDirectoryOrFileError: when source is not a file or directory
-    :raises DestinationExistsError: when destination exists and overwrite is False
-    :raises DestinationDoesNotExistError: when create is False and destination does not
-            exist
-    """
-
-    Copy(source, destination, create, overwrite).copy()
