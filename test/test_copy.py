@@ -61,4 +61,7 @@ def test_source_directory_to_destination_file(source_directory, destination_file
 def test_source_directory_to_destination_file_with_overwrite(
     source_directory, destination_file
 ):
-    pass
+    pyconfman.copy(source_directory, destination_file, overwrite=True)
+    assert destination_file.is_dir()
+    assert (destination_file / source_directory.name).exists()
+    assert (destination_file / source_directory.name).read_text() == "test"
