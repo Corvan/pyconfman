@@ -1,6 +1,5 @@
 from __future__ import annotations
 import abc
-import os
 import pathlib
 import shutil
 from shutil import SameFileError
@@ -124,6 +123,7 @@ def copy(
 ):
     """
     copy a resource (file or directory)
+
 
 
     :parameter source: the source (file or directory) to copy from
