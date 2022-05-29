@@ -55,6 +55,20 @@ def test_source_file_to_destination_directory(source_file, destination_directory
     assert destination_file.read_text() == "test"
 
 
+def test_source_file_to_destination_directory_create_false(source_file):
+    destination_directory = pathlib.Path(DESTINATION_PATH)
+    assert not destination_directory.exists()
+
+    with pytest.raises(pyconfman.DestinationDoesNotExistError) as exc_info:
+        pyconfman.copy(source_file, destination_directory, create=False)
+
+    assert exc_info.type == pyconfman.DestinationDoesNotExistError
+    assert (
+        exc_info.value.args[0]
+        == "destination does not exist, and create has not been chosen"
+    )
+
+
 def test_source_file_to_destination_directory_with_overwrite(
     source_file, destination_directory
 ):
