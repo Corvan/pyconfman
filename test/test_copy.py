@@ -9,6 +9,7 @@ from test.fixtures_copy import (
     destination_file,
     source_directory,
     destination_directory,
+    SOURCE_PATH,
     DESTINATION_PATH,
 )
 
@@ -42,6 +43,18 @@ def test_source_file_to_destination_file_with_overwrite(source_file, destination
     assert source_file.is_file()
 
     assert destination_file.read_text() == "test"
+
+
+def test_source_not_existing(destination_file):
+    source_file = pathlib.Path(SOURCE_PATH)
+
+    assert not source_file.exists()
+
+    with pytest.raises(pyconfman.SourceDoesNotExistError) as exc_info:
+        pyconfman.copy(source_file, destination_file)
+
+    assert exc_info.type == pyconfman.SourceDoesNotExistError
+    assert exc_info.value.args[0] == "source does not exist"
 
 
 def test_source_file_to_destination_directory(source_file, destination_directory):
