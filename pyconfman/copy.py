@@ -31,6 +31,10 @@ class Resource(abc.ABC):
         self._path: pathlib.Path = None
         self.path = path
 
+    @abc.abstractmethod
+    def check_preconditions(self):
+        raise NotImplementedError
+
     @property
     def path(self) -> pathlib.Path:
         return self._path
@@ -47,6 +51,10 @@ class Source(Resource):
     def __init__(self, path: pathlib.Path | str):
         super().__init__(path)
 
+    def check_preconditions(self):
+        if not self.path.exists():
+            raise SourceDoesNotExistError("source does not exist")
+
 
 class Destination(Resource):
     def __init__(self, path: pathlib.Path, create: bool, overwrite: bool):
@@ -54,6 +62,23 @@ class Destination(Resource):
         self.create: bool = create
         self.overwrite: bool = overwrite
         self.directory: bool = False
+
+    def check_preconditions(self):
+        if self.path.exists():
+            if self.path.is_file():
+                if not self.overwrite:
+                    raise DestinationExistsError(
+                        "destination already exists, and overwrite has not been chosen"
+                    )
+                self.path.unlink()
+            elif self.path.is_dir():
+                if self.overwrite:
+                    shutil.rmtree(self.path)
+        else:
+            if not self.create:
+                raise DestinationDoesNotExistError(
+                    "destination does not exist, and create has not been chosen"
+                )
 
     @Resource.path.setter
     def path(self, path: pathlib.Path | str):
@@ -76,24 +101,8 @@ class Copy:
         self.destination: Destination = Destination(destination, create, overwrite)
 
     def copy(self):
-        if not self.source.path.exists():
-            raise SourceDoesNotExistError("source does not exist")
-        if self.destination.path.exists():
-            if self.destination.path.is_file():
-                if not self.destination.overwrite:
-                    raise DestinationExistsError(
-                        "destination already exists, and overwrite has not been chosen"
-                    )
-                os.remove(self.destination.path)
-            elif self.destination.path.is_dir():
-                if self.destination.overwrite:
-                    shutil.rmtree(self.destination.path)
-        else:
-            if not self.destination.create:
-                raise DestinationDoesNotExistError(
-                    "destination does not exist, and create has not been chosen"
-                )
-
+        self.source.check_preconditions()
+        self.destination.check_preconditions()
         if self.source.path.is_dir():
             shutil.copytree(self.source.path, self.destination.path)
         elif self.source.path.is_file():
