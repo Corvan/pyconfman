@@ -52,7 +52,12 @@ def destination_file(prefix):
 
     yield destination_path
 
-    destination_path.unlink()
+    if destination_path.is_dir():
+        for child in destination_path.iterdir():
+            child.unlink()
+        destination_path.rmdir()
+    elif destination_path.is_file():
+        destination_path.unlink()
 
 
 @pytest.fixture
