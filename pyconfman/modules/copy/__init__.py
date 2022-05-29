@@ -1,5 +1,5 @@
 from .src.module import (
-    copy,
+    local_copy,
 )
 from .src.exceptions import (
     SourceDoesNotExistError,

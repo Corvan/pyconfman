@@ -4,7 +4,7 @@ import pathlib
 from pyconfman.modules.copy.src.models import Copy
 
 
-def copy(
+def local_copy(
     source: str | pathlib.Path,
     destination: str | pathlib.Path,
     create: bool = True,

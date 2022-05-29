@@ -17,7 +17,7 @@ def test_source_file_to_destination_file(source_file):
     destination_file = pathlib.Path(DESTINATION_PATH)
     assert not destination_file.exists()
 
-    pyconfman.modules.copy.copy(source_file, destination_file)
+    pyconfman.modules.copy.local_copy(source_file, destination_file)
 
     assert destination_file.exists()
     assert destination_file.read_text() == "test"
@@ -26,7 +26,7 @@ def test_source_file_to_destination_file(source_file):
 
 def test_source_file_to_destination_file_create_false(source_file, destination_file):
     with pytest.raises(pyconfman.modules.copy.DestinationExistsError) as exc_info:
-        pyconfman.modules.copy.copy(source_file, destination_file, create=False)
+        pyconfman.modules.copy.local_copy(source_file, destination_file, create=False)
 
     assert exc_info.type == pyconfman.modules.copy.DestinationExistsError
     assert (
@@ -36,7 +36,7 @@ def test_source_file_to_destination_file_create_false(source_file, destination_f
 
 
 def test_source_file_to_destination_file_with_overwrite(source_file, destination_file):
-    pyconfman.modules.copy.copy(source_file, destination_file, overwrite=True)
+    pyconfman.modules.copy.local_copy(source_file, destination_file, overwrite=True)
 
     assert destination_file.exists()
     assert source_file.is_file()
@@ -50,14 +50,14 @@ def test_source_not_existing(destination_file):
     assert not source_file.exists()
 
     with pytest.raises(pyconfman.modules.copy.SourceDoesNotExistError) as exc_info:
-        pyconfman.modules.copy.copy(source_file, destination_file)
+        pyconfman.modules.copy.local_copy(source_file, destination_file)
 
     assert exc_info.type == pyconfman.modules.copy.SourceDoesNotExistError
     assert exc_info.value.args[0] == "source does not exist"
 
 
 def test_source_file_to_destination_directory(source_file, destination_directory):
-    pyconfman.modules.copy.copy(source_file, destination_directory)
+    pyconfman.modules.copy.local_copy(source_file, destination_directory)
 
     assert destination_directory.exists()
     assert destination_directory.is_dir()
@@ -72,7 +72,9 @@ def test_source_file_to_destination_directory_create_false(source_file):
     assert not destination_directory.exists()
 
     with pytest.raises(pyconfman.modules.copy.DestinationDoesNotExistError) as exc_info:
-        pyconfman.modules.copy.copy(source_file, destination_directory, create=False)
+        pyconfman.modules.copy.local_copy(
+            source_file, destination_directory, create=False
+        )
 
     assert exc_info.type == pyconfman.modules.copy.DestinationDoesNotExistError
     assert (
@@ -84,7 +86,9 @@ def test_source_file_to_destination_directory_create_false(source_file):
 def test_source_file_to_destination_directory_with_overwrite(
     source_file, destination_directory
 ):
-    pyconfman.modules.copy.copy(source_file, destination_directory, overwrite=True)
+    pyconfman.modules.copy.local_copy(
+        source_file, destination_directory, overwrite=True
+    )
 
     assert destination_directory.exists()
     assert destination_directory.is_file()
@@ -93,7 +97,7 @@ def test_source_file_to_destination_directory_with_overwrite(
 
 def test_source_directory_to_destination_file(source_directory, destination_file):
     with pytest.raises(pyconfman.modules.copy.DestinationExistsError) as exc_info:
-        pyconfman.modules.copy.copy(source_directory, destination_file)
+        pyconfman.modules.copy.local_copy(source_directory, destination_file)
 
     assert exc_info.type == pyconfman.modules.copy.DestinationExistsError
     assert (
@@ -105,7 +109,9 @@ def test_source_directory_to_destination_file(source_directory, destination_file
 def test_source_directory_to_destination_file_with_overwrite(
     source_directory, destination_file
 ):
-    pyconfman.modules.copy.copy(source_directory, destination_file, overwrite=True)
+    pyconfman.modules.copy.local_copy(
+        source_directory, destination_file, overwrite=True
+    )
 
     assert destination_file.is_dir()
     assert (destination_file / source_directory.name).exists()
