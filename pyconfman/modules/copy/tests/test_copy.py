@@ -1,9 +1,7 @@
 import pathlib
-
 import pyconfman.modules
 import pytest
 
-import pyconfman.modules.copy.src.exceptions
 from pyconfman.modules.copy.tests.fixtures import (
     SOURCE_PATH,
     DESTINATION_PATH,
