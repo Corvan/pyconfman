@@ -96,7 +96,3 @@ class Copy:
                 shutil.copy(self.source.path, self.destination.path)
             except SameFileError:
                 pass
-        else:
-            raise SourceMustBeDirectoryOrFileError(
-                "source must be either file or directory"
-            )
