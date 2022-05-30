@@ -15,7 +15,8 @@ from pyconfman.modules.copy.src.exceptions import (
 
 class Resource(abc.ABC):
     def __init__(self, path: pathlib.Path | str):
-        self._path: pathlib.Path = None
+        self._path: pathlib.Path | None = None
+        self.directory = False
         self.path = path
 
     @abc.abstractmethod
@@ -29,7 +30,9 @@ class Resource(abc.ABC):
     @path.setter
     def path(self, path: pathlib.Path | str):
         if isinstance(path, str):
-            self._path = pathlib.Path(path)
+            if path[-1] == "/":
+                self.directory = True
+            self.path = pathlib.Path(path)
         else:
             self._path = path
 
@@ -41,6 +44,10 @@ class Source(Resource):
     def check_preconditions(self):
         if not self.path.exists():
             raise SourceDoesNotExistError("source does not exist")
+        if not (self.path.is_dir() or self.path.is_file()):
+            raise SourceMustBeDirectoryOrFileError(
+                "source must be either regular file or directory"
+            )
 
 
 class Destination(Resource):
@@ -66,14 +73,6 @@ class Destination(Resource):
                 raise DestinationDoesNotExistError(
                     "destination does not exist, and create has not been chosen"
                 )
-
-    @Resource.path.setter
-    def path(self, path: pathlib.Path | str):
-        if isinstance(path, str):
-            if path[-1] == "/":
-                self.directory = True
-        else:
-            self._path = path
 
 
 class Copy:
