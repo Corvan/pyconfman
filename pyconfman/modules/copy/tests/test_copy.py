@@ -1,4 +1,6 @@
 import pathlib
+import shutil
+
 import pyconfman.modules
 import pytest
 
@@ -137,6 +139,18 @@ class TestPaths:
         assert exc_info.type == pyconfman.modules.copy.SourceMustBeDirectoryOrFileError
         assert (
             exc_info.value.args[0] == "source must be either regular file or directory"
+        )
+
+    def test_source_and_destination_are_same_file(self, source_file):
+        with pytest.raises(shutil.SameFileError) as exc_info:
+            pyconfman.modules.copy.local_copy(
+                source_file, source_file, same_file_ok=False
+            )
+        assert exc_info.type == shutil.SameFileError
+        assert (
+            exc_info.value.args[0]
+            == f"PosixPath('{source_file}') and PosixPath('{source_file}') "
+            f"are the same file"
         )
 
 

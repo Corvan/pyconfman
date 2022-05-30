@@ -9,6 +9,7 @@ def local_copy(
     destination: str | pathlib.Path,
     create: bool = True,
     overwrite: bool = False,
+    same_file_ok: bool = True,
 ):
     """
     copy a resource (file or directory)
@@ -29,12 +30,17 @@ def local_copy(
     :parameter destination: the destination (file or directory) to copy to
     :parameter create: create the destination if it does not exist
     :parameter overwrite: overwrite the destination if it exists
+    :parameter same_file_ok: indicate if an Exception should be raised when source and
+               destination are the same file. If this is True no exception will be
+               raised
     :raises SourceDoesNotExistError: when source does not exist
     :raises SourceMustBeDirectoryOrFileError: when source is not a regular file or
             directory
     :raises DestinationExistsError: when destination exists and overwrite is False
     :raises DestinationDoesNotExistError: when create is False and destination does not
             exist
+    :raises `shutil.SameFileError`: if same_file_ok is False and source as well as
+            destination are the same file
     """
 
-    Copy(source, destination, create, overwrite).copy()
+    Copy(source, destination, create, overwrite, same_file_ok).copy()

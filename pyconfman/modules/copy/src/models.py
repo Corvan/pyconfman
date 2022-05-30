@@ -3,7 +3,6 @@ from __future__ import annotations
 import abc
 import pathlib
 import shutil
-from shutil import SameFileError
 
 from pyconfman.modules.copy.src.exceptions import (
     SourceDoesNotExistError,
@@ -82,17 +81,28 @@ class Copy:
         destination: pathlib.Path,
         create: bool,
         overwrite: bool,
+        same_sile_ok: bool,
     ):
         self.source: Source = Source(source)
         self.destination: Destination = Destination(destination, create, overwrite)
+        self.same_file_ok = same_sile_ok
 
     def copy(self):
         self.source.check_preconditions()
-        self.destination.check_preconditions()
+        try:
+            self.destination.check_preconditions()
+        except DestinationExistsError:
+            if not self.same_file_ok and self.source.path.samefile(
+                self.destination.path
+            ):
+                pass
+            else:
+                raise
         if self.source.path.is_dir():
             shutil.copytree(self.source.path, self.destination.path)
         elif self.source.path.is_file():
             try:
                 shutil.copy(self.source.path, self.destination.path)
-            except SameFileError:
-                pass
+            except shutil.SameFileError:
+                if not self.same_file_ok:
+                    raise
