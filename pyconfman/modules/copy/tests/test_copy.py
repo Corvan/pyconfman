@@ -122,6 +122,23 @@ class TestPaths:
         assert (destination_file / source_directory.name).exists()
         assert (destination_file / source_directory.name).read_text() == "test"
 
+    def test_source_not_directory_or_file(self):
+        source_file = pathlib.Path("/dev/loop0")
+        destination_file = pathlib.Path(DESTINATION_PATH)
+
+        assert source_file.exists()
+        assert source_file.is_block_device()
+
+        with pytest.raises(
+            pyconfman.modules.copy.SourceMustBeDirectoryOrFileError
+        ) as exc_info:
+            pyconfman.modules.copy.local_copy(source_file, destination_file)
+
+        assert exc_info.type == pyconfman.modules.copy.SourceMustBeDirectoryOrFileError
+        assert (
+            exc_info.value.args[0] == "source must be either regular file or directory"
+        )
+
 
 class TestStrings:
     def test_source_file_to_destination_file(self, source_file):
@@ -235,3 +252,21 @@ class TestStrings:
         assert destination_file.is_dir()
         assert (destination_file / source_directory.name).exists()
         assert (destination_file / source_directory.name).read_text() == "test"
+
+    def test_source_not_directory_or_file(self):
+        source_file = "/dev/loop0"
+        destination_file = DESTINATION_PATH
+
+        source_path = pathlib.Path(source_file)
+        assert source_path.exists()
+        assert source_path.is_block_device()
+
+        with pytest.raises(
+            pyconfman.modules.copy.SourceMustBeDirectoryOrFileError
+        ) as exc_info:
+            pyconfman.modules.copy.local_copy(source_file, destination_file)
+
+        assert exc_info.type == pyconfman.modules.copy.SourceMustBeDirectoryOrFileError
+        assert (
+            exc_info.value.args[0] == "source must be either regular file or directory"
+        )
