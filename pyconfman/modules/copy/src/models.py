@@ -57,16 +57,19 @@ class Destination(Resource):
         self.directory: bool = False
 
     def check_preconditions(self):
-        if self.path.exists():
-            if self.path.is_file():
-                if not self.overwrite:
-                    raise DestinationExistsError(
-                        "destination already exists, and overwrite has not been chosen"
-                    )
-                self.path.unlink()
-            elif self.path.is_dir():
-                if self.overwrite:
-                    shutil.rmtree(self.path)
+        """
+        Check if preconditions for using a destination are met.
+        :raises `DestinationExistsError`:
+        :raises `DestinationDoesNotExistError`:
+        """
+        if self.path.exists() and self.path.is_file():
+            if not self.overwrite:
+                raise DestinationExistsError(
+                    "destination already exists, and overwrite has not been chosen"
+                )
+            self.path.unlink()
+        elif self.path.is_dir() and self.overwrite:
+            shutil.rmtree(self.path)
         else:
             if not self.create:
                 raise DestinationDoesNotExistError(
