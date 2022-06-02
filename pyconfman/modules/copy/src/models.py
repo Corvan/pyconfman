@@ -84,11 +84,11 @@ class Copy:
         destination: pathlib.Path,
         create: bool,
         overwrite: bool,
-        same_sile_ok: bool,
+        same_file_ok: bool,
     ):
         self.source: Source = Source(source)
         self.destination: Destination = Destination(destination, create, overwrite)
-        self.same_file_ok = same_sile_ok
+        self.same_file_ok = same_file_ok
 
     def copy(self):
         self.source.check_preconditions()
