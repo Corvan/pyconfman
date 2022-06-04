@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import abc
 import pathlib
 import shutil
+
+import pyconfman.models
 
 from pyconfman.modules.copy.src.exceptions import (
     SourceDoesNotExistError,
@@ -12,31 +13,7 @@ from pyconfman.modules.copy.src.exceptions import (
 )
 
 
-class Resource(abc.ABC):
-    def __init__(self, path: pathlib.Path | str):
-        self._path: pathlib.Path | None = None
-        self.directory = False
-        self.path = path
-
-    @abc.abstractmethod
-    def check_preconditions(self):
-        raise NotImplementedError
-
-    @property
-    def path(self) -> pathlib.Path:
-        return self._path
-
-    @path.setter
-    def path(self, path: pathlib.Path | str):
-        if isinstance(path, str):
-            if path[-1] == "/":
-                self.directory = True
-            self.path = pathlib.Path(path)
-        else:
-            self._path = path
-
-
-class Source(Resource):
+class Source(pyconfman.models.Resource):
     def __init__(self, path: pathlib.Path | str):
         super().__init__(path)
 
@@ -49,7 +26,7 @@ class Source(Resource):
             )
 
 
-class Destination(Resource):
+class Destination(pyconfman.models.Resource):
     def __init__(self, path: pathlib.Path, create: bool, overwrite: bool):
         super().__init__(path)
         self.create: bool = create
@@ -77,7 +54,7 @@ class Destination(Resource):
                 )
 
 
-class Copy:
+class Copy(pyconfman.models.Action):
     def __init__(
         self,
         source: pathlib.Path,
