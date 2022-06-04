@@ -26,10 +26,12 @@ def local_copy(
     - "/tmp/file"
     - "/tmp/directory/"
 
+    TODO: describe copy behaviour with destination directories
+
     :parameter source: the source (file or directory) to copy from
     :parameter destination: the destination (file or directory) to copy to
     :parameter create: create the destination if it does not exist
-    :parameter overwrite: overwrite the destination if it exists
+    :parameter overwrite: overwrite the destination if it exists TODO: add warning
     :parameter same_file_ok: indicate if an Exception should be raised when source and
                destination are the same file. If this is True no exception will be
                raised
