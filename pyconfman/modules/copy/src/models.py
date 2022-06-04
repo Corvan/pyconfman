@@ -153,28 +153,30 @@ class Copy:
         self.same_file_ok = same_file_ok
 
     def copy(self):
-    """
-    execute the actual copy operation. # TODO: describe copy inside dirs
+        """
+        execute the actual copy operation. # TODO: describe copy inside dirs
 
-    :raises DestinationExistsError: if the destination exists and
-            `self.same_file_ok`
-            is `False`, while source and destination are not the same.
-    :raises `shutil.SameFileError`: when source and destination are the same and
-            `self.same_file_ok` is `False`
-    """
-    self.source.check_preconditions()
-    try:
-        self.destination.check_preconditions()
-    except DestinationExistsError:
-        if not self.same_file_ok and self.source.path.samefile(self.destination.path):
-            pass
-        else:
-            raise
-        if self.source.path.is_dir():
-            shutil.copytree(self.source.path, self.destination.path)
-        elif self.source.path.is_file():
-            try:
-                shutil.copy(self.source.path, self.destination.path)
-            except shutil.SameFileError:
-                if not self.same_file_ok:
-                    raise
+        :raises DestinationExistsError: if the destination exists and
+                `self.same_file_ok`
+                is `False`, while source and destination are not the same.
+        :raises `shutil.SameFileError`: when source and destination are the same and
+                `self.same_file_ok` is `False`
+        """
+        self.source.check_preconditions()
+        try:
+            self.destination.check_preconditions()
+        except DestinationExistsError:
+            if not self.same_file_ok and self.source.path.samefile(
+                self.destination.path
+            ):
+                pass
+            else:
+                raise
+            if self.source.path.is_dir():
+                shutil.copytree(self.source.path, self.destination.path)
+            elif self.source.path.is_file():
+                try:
+                    shutil.copy(self.source.path, self.destination.path)
+                except shutil.SameFileError:
+                    if not self.same_file_ok:
+                        raise
