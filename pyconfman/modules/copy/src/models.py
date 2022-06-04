@@ -154,7 +154,7 @@ class Copy:
 
     def copy(self):
     """
-    execute the actual copy operation. TODO: describe copy inside dirs
+    execute the actual copy operation. # TODO: describe copy inside dirs
 
     :raises DestinationExistsError: if the destination exists and
             `self.same_file_ok`
