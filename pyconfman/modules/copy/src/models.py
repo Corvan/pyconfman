@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pathlib
 import shutil
+from typing import Optional
 
 import pyconfman.models
 
@@ -16,8 +17,6 @@ from pyconfman.modules.copy.src.exceptions import (
 class Source(pyconfman.models.Resource):
     def __init__(self, path: pathlib.Path | str):
         super().__init__(path)
-
-    def check_preconditions(self):
         if not self.path.exists():
             raise SourceDoesNotExistError("source does not exist")
         if not (self.path.is_dir() or self.path.is_file()):
@@ -33,12 +32,6 @@ class Destination(pyconfman.models.Resource):
         self.overwrite: bool = overwrite
         self.directory: bool = False
 
-    def check_preconditions(self):
-        """
-        Check if preconditions for using a destination are met.
-        :raises `DestinationExistsError`:
-        :raises `DestinationDoesNotExistError`:
-        """
         if self.path.exists() and self.path.is_file():
             if not self.overwrite:
                 raise DestinationExistsError(
@@ -59,25 +52,21 @@ class Copy(pyconfman.models.Action):
         self,
         source: pathlib.Path,
         destination: pathlib.Path,
+        update: bool,
         create: bool,
         overwrite: bool,
         same_file_ok: bool,
     ):
-        self.source: Source = Source(source)
-        self.destination: Destination = Destination(destination, create, overwrite)
+        self.update = update
         self.same_file_ok = same_file_ok
+        self.source: Source = Source(source)
+        if self.update:
+            if self.has_changed(destination):
+                overwrite = True
+        self.destination: Destination = Destination(destination, create, overwrite)
 
     def copy(self):
-        self.source.check_preconditions()
-        try:
-            self.destination.check_preconditions()
-        except DestinationExistsError:
-            if not self.same_file_ok and self.source.path.samefile(
-                self.destination.path
-            ):
-                pass
-            else:
-                raise
+
         if self.source.path.is_dir():
             shutil.copytree(self.source.path, self.destination.path)
         elif self.source.path.is_file():
@@ -86,3 +75,13 @@ class Copy(pyconfman.models.Action):
             except shutil.SameFileError:
                 if not self.same_file_ok:
                     raise
+
+    def has_changed(self, destination: Optional[pathlib.Path] = None) -> bool:
+        if destination:
+            if self.source.hash == Destination.calculate_hash(
+                destination,
+            ):
+                return True
+        elif self.source.hash == self.destination.hash:
+            return True
+        return False

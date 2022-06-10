@@ -8,7 +8,6 @@ from .model import Model
 
 
 class Resource(Model):
-
     __metaclass__ = abc.ABCMeta
     _path: pathlib.Path | None = None
 
@@ -23,10 +22,6 @@ class Resource(Model):
         self.hashing_algorithm: str = hashing_algorithm
         self.hashing_block_size: int = hashing_block_size
         self.__hash: str | None = None
-
-    @abc.abstractmethod
-    def check_preconditions(self):
-        raise NotImplementedError
 
     @property
     def path(self) -> pathlib.Path:
@@ -44,15 +39,28 @@ class Resource(Model):
     @property
     def hash(self) -> str:
         if not self.__hash:
-            self._calculate_hash()
+            self.__hash = Resource.calculate_hash(
+                self.path,
+                self.hashing_algorithm,
+                self.hashing_block_size,
+            )
         return self.__hash
 
-    def _calculate_hash(self):
-        hasher = hashlib.new(self.hashing_algorithm)
+    @staticmethod
+    def calculate_hash(
+        path: pathlib.Path | str,
+        hashing_algorithm: str = "sha3_512",
+        hashing_block_size: int = 65536,
+    ):
+        hasher = hashlib.new(hashing_algorithm)
+        if isinstance(path, str):
+            path = pathlib.Path(path)
+        if not path.exists() or not path.is_file():
+            return ""
 
-        with open(self.path, "rb") as fd:
-            buffer = fd.read(self.hashing_block_size)
+        with open(path, "rb") as fd:
+            buffer = fd.read(hashing_block_size)
             while len(buffer) > 0:
-                buffer = fd.read(self.hashing_block_size)
+                buffer = fd.read(hashing_block_size)
                 hasher.update(buffer)
-        self.__hash = hasher.hexdigest()
+        return hasher.hexdigest()
