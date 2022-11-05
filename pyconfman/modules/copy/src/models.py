@@ -63,6 +63,9 @@ class Copy(pyconfman.models.Action):
         if self.update:
             if self.has_changed(destination):
                 overwrite = True
+        else:
+            if not self.has_changed(destination):
+                pass
         self.destination: Destination = Destination(destination, create, overwrite)
 
     def copy(self):
@@ -82,6 +85,7 @@ class Copy(pyconfman.models.Action):
                 destination,
             ):
                 return True
+        # TODO: check if this is ever reached
         elif self.source.hash == self.destination.hash:
             return True
         return False

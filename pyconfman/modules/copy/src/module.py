@@ -7,6 +7,7 @@ from pyconfman.modules.copy.src.models import Copy
 def local_copy(
     source: str | pathlib.Path,
     destination: str | pathlib.Path,
+    update: bool = True,
     create: bool = True,
     overwrite: bool = False,
     same_file_ok: bool = True,
@@ -28,6 +29,7 @@ def local_copy(
 
     :parameter source: the source (file or directory) to copy from
     :parameter destination: the destination (file or directory) to copy to
+    :parameter update: indicate if an already existing file should be updated
     :parameter create: create the destination if it does not exist
     :parameter overwrite: overwrite the destination if it exists
     :parameter same_file_ok: indicate if an Exception should be raised when source and
@@ -43,4 +45,4 @@ def local_copy(
             destination are the same file
     """
 
-    Copy(source, destination, create, overwrite, same_file_ok).copy()
+    Copy(source, destination, update, create, overwrite, same_file_ok).copy()

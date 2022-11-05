@@ -20,7 +20,7 @@ class TestPaths:
         destination_file = pathlib.Path(DESTINATION_PATH)
         assert not destination_file.exists()
 
-        pyconfman.modules.copy.local_copy(source_file, destination_file)
+        pyconfman.modules.copy.local_copy(source_file, destination_file, update=False)
 
         assert destination_file.exists()
         assert destination_file.read_text() == "test"
@@ -31,7 +31,7 @@ class TestPaths:
     ):
         with pytest.raises(pyconfman.modules.copy.DestinationExistsError) as exc_info:
             pyconfman.modules.copy.local_copy(
-                source_file, destination_file, create=False
+                source_file, destination_file, create=False, update=False
             )
 
         assert exc_info.type == pyconfman.modules.copy.DestinationExistsError
@@ -144,7 +144,7 @@ class TestPaths:
     def test_source_and_destination_are_same_file(self, source_file):
         with pytest.raises(shutil.SameFileError) as exc_info:
             pyconfman.modules.copy.local_copy(
-                source_file, source_file, same_file_ok=False
+                source_file, source_file, update=False, same_file_ok=False
             )
         assert exc_info.type == shutil.SameFileError
         assert (
@@ -170,7 +170,7 @@ class TestStrings:
     ):
         with pytest.raises(pyconfman.modules.copy.DestinationExistsError) as exc_info:
             pyconfman.modules.copy.local_copy(
-                str(source_file), str(destination_file), create=False
+                str(source_file), str(destination_file), create=False, update=False
             )
 
         assert exc_info.type == pyconfman.modules.copy.DestinationExistsError
