@@ -7,10 +7,10 @@ try:
 except (ImportError, ModuleNotFoundError):
     import tomli as toml
 
-config: dict
-config_path = Path("config.toml")
 
-if __name__ == "__main__":
+if __name__ == "__main__" or __name__ == "pyconfman.__main__":
+    config = dict()
+    config_path = Path("config.toml")
     if config_path.exists():
         with open("config.toml", "rb") as fd:
             config = toml.load(fd)["pyconfman"]["main"]
@@ -18,3 +18,5 @@ if __name__ == "__main__":
     config.setdefault("playbook", "playbook")
     inventory = Inventory.import_module(config["inventory"])
     pyconfman.models.playbook.run(config["playbook"], inventory)
+    if __name__ == "pyconfman.__main__":  # we are in the testing environment
+        globals()["test"] = inventory
