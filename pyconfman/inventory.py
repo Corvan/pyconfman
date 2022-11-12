@@ -36,21 +36,29 @@ class Group(set):
         return sum(element.__hash__() for element in self)
 
 
-def filter_module_dict(module: types.ModuleType):
-    return {
-        key: value
-        for key, value in module.__dict__.items()
-        if not any(
-            (
-                key.startswith("__") and key.endswith("__"),  # builtins
-                isinstance(value, type),  # classes
-                isinstance(value, types.ModuleType),  # modules
+class Inventory(dict):
+
+    name: str
+
+    def __init__(self, name: str):
+        self.name = name
+        super().__init__(Inventory.import_module(name))
+
+    @staticmethod
+    def filter_module_dict(module: types.ModuleType):
+        return {
+            key: value
+            for key, value in module.__dict__.items()
+            if not any(
+                (
+                    key.startswith("__") and key.endswith("__"),  # builtins
+                    isinstance(value, type),  # classes
+                    isinstance(value, types.ModuleType),  # modules
+                )
             )
-        )
-    }
+        }
 
-
-def import_module(name: str) -> dict[str, Group | Host]:
-
-    module = importlib.import_module(name)
-    return filter_module_dict(module)
+    @staticmethod
+    def import_module(name: str) -> dict[str, Group | Host]:
+        module = importlib.import_module(name)
+        return Inventory.filter_module_dict(module)
