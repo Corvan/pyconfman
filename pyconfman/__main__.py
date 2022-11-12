@@ -1,6 +1,6 @@
 from pathlib import Path
-from pyconfman.inventory import Inventory
-import pyconfman.playbook
+from pyconfman.models.inventory import Inventory
+import pyconfman.models.playbook
 
 try:
     import tomllib as toml
@@ -17,4 +17,4 @@ if __name__ == "__main__":
     config.setdefault("inventory", "inventory")
     config.setdefault("playbook", "playbook")
     inventory = Inventory.import_module(config["inventory"])
-    pyconfman.playbook.run(config["playbook"], inventory)
+    pyconfman.models.playbook.run(config["playbook"], inventory)
