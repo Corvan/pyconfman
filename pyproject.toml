@@ -1,86 +1,17 @@
-[project]
-name = "pyconfman"
-version = "0.0.1"
-description = "A pure Python configuration manager"
-readme = "README.rst"
-requires-python = ">=3.8"
-license = "LGPL-3.0-or-later"
-keywords = ["configuration", "management"]
-authors = [
-  {email = "corvan@gmx.de"},
-  {name = "Lars Liedtke"}
-]
-
-classifiers = [
-  "Development Status :: 4 - Beta",
-  "Programming Language :: Python"
-]
-
-dependencies = [
-
-]
-
-[project.optional-dependencies]
-test = [
-  "pytest",
-  "coverage",
-  "pytest-cov"
-]
-
-[project.urls]
-homepage = "example.com"
-documentation = "readthedocs.org"
-repository = "github.com"
-changelog = "github.com/me/spam/blob/master/CHANGELOG.md"
-
-[project.scripts]
-spam-cli = "spam:main_cli"
-
-[project.gui-scripts]
-spam-gui = "spam:main_gui"
-
-[project.entry-points."spam.magical"]
-tomatoes = "spam:main_tomatoes"
-
 [tool.poetry]
 name = "pyconfman"
-version = "0.0.1"
-description = "A pure Python configuration manager"
-authors = ["Lars Liedtke <corvan@gmx.de>"]
-license = "LGPL-3.0-or-later"
+version = "0.1.0"
+description = ""
+authors = ["Lars Liedtke <lars@familie-liedtke.net>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
+tomli = { version = "^2.0.1", python = "<3.11" }
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.1.2"
-coverage = "^6.4"
-pytest-cov = "^3.0.0"
+pylint = "^2.15.5"
+pytest = "^7.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.black]
-line-length = 88
-target_version = ['py38', 'py39', 'py310']
-include = '\.pyi?$'
-exclude = '''
-
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-  | foo.py           # also separately exclude a file named foo.py in
-                     # the root of the project
-)
-'''

@@ -229,3 +229,5 @@ cython_debug/
 /test/{PREFIX}
 /sys
 test/.pytest_cache
+
+poetry.lock
