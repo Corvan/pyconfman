@@ -7,13 +7,40 @@ authors = ["Lars Liedtke <lars@familie-liedtke.net>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 tomli = { version = "^2.0.1", python = "<3.11" }
-tox = "^3.27.0"
-pylint = "^2.15.5"
+tox = "*"
+flake8 = "*"
+pytest = "*"
 
 [tool.poetry.dev-dependencies]
-pylint = "^2.15.5"
+pylint = "*"
 pytest = "^7.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.tox]
+legacy_tox_ini = """
+
+[tox]
+requires =
+    pylint
+    pytest
+skip_missing_interpreters = true
+envlist =
+    py{39,310,311}-{lint,unittest,integration_test}
+
+isolated_build = true
+
+[testenv]
+passenv=PYTHONPATH
+
+[testenv:py{39,310,311}-lint]
+commands = pylint pyconfman
+[testenv:py{39,310,311}-unittest]
+commands =  pytest -vm unit .
+[testenv:py{39,310,311}-integration_test]
+commands = pytest -vm integration .
+"""
+[tool.pytest.ini_options]
+markers = ["unit","integration"]

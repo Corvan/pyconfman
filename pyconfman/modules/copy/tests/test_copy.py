@@ -16,6 +16,7 @@ from pyconfman.modules.copy.tests.fixtures import (
 
 
 class TestPaths:
+    @pytest.mark.unit
     def test_source_file_to_destination_file(self, source_file):
         destination_file = pathlib.Path(DESTINATION_PATH)
         assert not destination_file.exists()
@@ -26,6 +27,7 @@ class TestPaths:
         assert destination_file.read_text() == "test"
         destination_file.unlink()
 
+    @pytest.mark.unit
     def test_source_file_to_destination_file_create_false(
         self, source_file, destination_file
     ):
@@ -40,6 +42,7 @@ class TestPaths:
             == "destination already exists, and overwrite has not been chosen"
         )
 
+    @pytest.mark.unit
     def test_source_file_to_destination_file_with_overwrite(
         self, source_file, destination_file
     ):
@@ -50,6 +53,7 @@ class TestPaths:
 
         assert destination_file.read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_not_existing(self, destination_file):
         source_file = pathlib.Path(SOURCE_PATH)
 
@@ -61,6 +65,7 @@ class TestPaths:
         assert exc_info.type == pyconfman.modules.copy.SourceDoesNotExistError
         assert exc_info.value.args[0] == "source does not exist"
 
+    @pytest.mark.unit
     def test_source_file_to_destination_directory(
         self, source_file, destination_directory
     ):
@@ -73,6 +78,7 @@ class TestPaths:
         assert destination_file.exists()
         assert destination_file.read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_file_to_destination_directory_create_false(self, source_file):
         destination_directory = pathlib.Path(DESTINATION_PATH)
         assert not destination_directory.exists()
@@ -90,6 +96,7 @@ class TestPaths:
             == "destination does not exist, and create has not been chosen"
         )
 
+    @pytest.mark.unit
     def test_source_file_to_destination_directory_with_overwrite(
         self, source_file, destination_directory
     ):
@@ -101,6 +108,7 @@ class TestPaths:
         assert destination_directory.is_file()
         assert destination_directory.read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_directory_to_destination_file(
         self, source_directory, destination_file
     ):
@@ -113,6 +121,7 @@ class TestPaths:
             == "destination already exists, and overwrite has not been chosen"
         )
 
+    @pytest.mark.unit
     def test_source_directory_to_destination_file_with_overwrite(
         self, source_directory, destination_file
     ):
@@ -124,6 +133,7 @@ class TestPaths:
         assert (destination_file / source_directory.name).exists()
         assert (destination_file / source_directory.name).read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_not_directory_or_file(self):
         source_file = pathlib.Path("/dev/loop0")
         destination_file = pathlib.Path(DESTINATION_PATH)
@@ -141,20 +151,21 @@ class TestPaths:
             exc_info.value.args[0] == "source must be either regular file or directory"
         )
 
+    @pytest.mark.unit
     def test_source_and_destination_are_same_file(self, source_file):
-        with pytest.raises(shutil.SameFileError) as exc_info:
+        with pytest.raises(pyconfman.modules.copy.DestinationExistsError) as exc_info:
             pyconfman.modules.copy.local_copy(
                 source_file, source_file, update=False, same_file_ok=False
             )
-        assert exc_info.type == shutil.SameFileError
+        assert exc_info.type == pyconfman.modules.copy.DestinationExistsError
         assert (
             exc_info.value.args[0]
-            == f"PosixPath('{source_file}') and PosixPath('{source_file}') "
-            f"are the same file"
+            == "destination already exists, and overwrite has not been chosen"
         )
 
 
 class TestStrings:
+    @pytest.mark.unit
     def test_source_file_to_destination_file(self, source_file):
         destination_file = pathlib.Path(DESTINATION_PATH)
         assert not destination_file.exists()
@@ -165,6 +176,7 @@ class TestStrings:
         assert destination_file.read_text() == "test"
         destination_file.unlink()
 
+    @pytest.mark.unit
     def test_source_file_to_destination_file_create_false(
         self, source_file, destination_file
     ):
@@ -179,6 +191,7 @@ class TestStrings:
             == "destination already exists, and overwrite has not been chosen"
         )
 
+    @pytest.mark.unit
     def test_source_file_to_destination_file_with_overwrite(
         self, source_file, destination_file
     ):
@@ -191,6 +204,7 @@ class TestStrings:
 
         assert destination_file.read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_not_existing(self, destination_file):
         source_file = pathlib.Path(SOURCE_PATH)
 
@@ -202,6 +216,7 @@ class TestStrings:
         assert exc_info.type == pyconfman.modules.copy.SourceDoesNotExistError
         assert exc_info.value.args[0] == "source does not exist"
 
+    @pytest.mark.unit
     def test_source_file_to_destination_directory(
         self, source_file, destination_directory
     ):
@@ -214,6 +229,7 @@ class TestStrings:
         assert destination_file.exists()
         assert destination_file.read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_file_to_destination_directory_create_false(self, source_file):
         destination_directory = pathlib.Path(DESTINATION_PATH)
         assert not destination_directory.exists()
@@ -231,6 +247,7 @@ class TestStrings:
             == "destination does not exist, and create has not been chosen"
         )
 
+    @pytest.mark.unit
     def test_source_file_to_destination_directory_with_overwrite(
         self, source_file, destination_directory
     ):
@@ -242,6 +259,7 @@ class TestStrings:
         assert destination_directory.is_file()
         assert destination_directory.read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_directory_to_destination_file(
         self, source_directory, destination_file
     ):
@@ -256,6 +274,7 @@ class TestStrings:
             == "destination already exists, and overwrite has not been chosen"
         )
 
+    @pytest.mark.unit
     def test_source_directory_to_destination_file_with_overwrite(
         self, source_directory, destination_file
     ):
@@ -267,6 +286,7 @@ class TestStrings:
         assert (destination_file / source_directory.name).exists()
         assert (destination_file / source_directory.name).read_text() == "test"
 
+    @pytest.mark.unit
     def test_source_not_directory_or_file(self):
         source_file = "/dev/loop0"
         destination_file = DESTINATION_PATH
