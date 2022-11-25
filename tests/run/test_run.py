@@ -1,10 +1,12 @@
 import importlib
 import os
+import pytest
 from pyconfman.models.inventory import Host, Group
 import shutil
 import subprocess
 
 
+@pytest.mark.integration
 def test_run_module():
     module = importlib.import_module("pyconfman.__main__")
     glob = {"test": "test"}
@@ -39,6 +41,7 @@ def test_run_module():
     )
 
 
+@pytest.mark.integration
 def test_run_from_commandline():
     poetry_path = shutil.which("poetry")
     poetry_process = subprocess.run(
