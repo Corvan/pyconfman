@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyconfman"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Lars Liedtke <lars@familie-liedtke.net>"]
 
@@ -10,7 +10,7 @@ tomli = { version = "^2.0.1", python = "<3.11" }
 tox = "^3"
 black = "*"
 pytest = "*"
-mypy = "^0.9"
+mypy = "^0"
 
 [tool.poetry.dev-dependencies]
 pylint = "*"
@@ -50,8 +50,12 @@ allowlist_externals =
     mypy
 commands = mypy .
 [testenv:py{39,310,311}-unittest]
+allowlist_externals =
+    pytest
 commands =  pytest -vm unit .
 [testenv:py{39,310,311}-integration_test]
+allowlist_externals =
+    pytest
 commands = pytest -vm integration .
 """
 
