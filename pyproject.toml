@@ -7,9 +7,10 @@ authors = ["Lars Liedtke <lars@familie-liedtke.net>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 tomli = { version = "^2.0.1", python = "<3.11" }
-tox = "*"
-flake8 = "*"
+tox = "^3"
+black = "*"
 pytest = "*"
+mypy = "^0.9"
 
 [tool.poetry.dev-dependencies]
 pylint = "*"
@@ -26,17 +27,27 @@ legacy_tox_ini = """
 requires =
     pylint
     pytest
+    black
+    mypy
 skip_missing_interpreters = true
 envlist =
-    py{39,310,311}-{lint,unittest,integration_test}
+    py{39,310,311}-{black,lint,mypy,unittest,integration_test}
 
 isolated_build = true
 
 [testenv]
 passenv=PYTHONPATH
 
+[testenv:py{39,310,311}-black]
+commands = black --check .
 [testenv:py{39,310,311}-lint]
-commands = pylint pyconfman
+allowlist_externals =
+    pylint
+commands = pylint --ignore-paths .*/tests/.* pyconfman
+[testenv:py{39,310,311}-mypy]
+allowlist_externals =
+    mypy
+commands = mypy --exclude tests/* .
 [testenv:py{39,310,311}-unittest]
 commands =  pytest -vm unit .
 [testenv:py{39,310,311}-integration_test]
