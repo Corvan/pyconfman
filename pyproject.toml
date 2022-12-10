@@ -48,7 +48,7 @@ commands = pylint pyconfman
 [testenv:py{39,310,311}-mypy]
 allowlist_externals =
     mypy
-commands = mypy --exclude tests/* .
+commands = mypy --exclude tests/* --show-error-context --pretty .
 [testenv:py{39,310,311}-unittest]
 commands =  pytest -vm unit .
 [testenv:py{39,310,311}-integration_test]

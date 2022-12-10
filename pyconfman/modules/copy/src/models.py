@@ -24,9 +24,9 @@ class Source(pyconfman.models.Resource):
 
     def __init__(self, path: pathlib.Path | str):
         super().__init__(path)
-        if not self.path.exists():
+        if self.path and not self.path.exists():
             raise SourceDoesNotExistError("source does not exist")
-        if not (self.path.is_dir() or self.path.is_file()):
+        if self.path and not (self.path.is_dir() or self.path.is_file()):
             raise SourceMustBeDirectoryOrFileError(
                 "source must be either regular file or directory"
             )
@@ -43,13 +43,13 @@ class Destination(pyconfman.models.Resource):
         self.overwrite: bool = overwrite
         self.directory: bool = False
 
-        if self.path.exists() and self.path.is_file():
+        if self.path and self.path.exists() and self.path.is_file():
             if not self.overwrite:
                 raise DestinationExistsError(
                     "destination already exists, and overwrite has not been chosen"
                 )
             self.path.unlink()
-        elif self.path.is_dir() and self.overwrite:
+        elif self.path and self.path.is_dir() and self.overwrite:
             shutil.rmtree(self.path)
         else:
             if not self.create:
@@ -65,8 +65,8 @@ class Copy(pyconfman.models.Action):
 
     def __init__(
         self,
-        source: pathlib.Path,
-        destination: pathlib.Path,
+        source: pathlib.Path | str,
+        destination: pathlib.Path | str,
         update: bool,
         create: bool,
         overwrite: bool,
@@ -76,13 +76,17 @@ class Copy(pyconfman.models.Action):
         self.update = update
         self.same_file_ok = same_file_ok
         self.source: Source = Source(source)
+        self.destination: Destination = Destination(
+            pathlib.Path(destination) if isinstance(destination, str) else destination,
+            create,
+            overwrite,
+        )
         if self.update:
-            if self.has_changed(destination):
-                overwrite = True
+            if self.has_changed(self.destination.path):
+                self.overwrite = True
         else:
-            if not self.has_changed(destination):
+            if not self.has_changed(self.destination.path):
                 pass
-        self.destination: Destination = Destination(destination, create, overwrite)
 
     def copy(self):
         """

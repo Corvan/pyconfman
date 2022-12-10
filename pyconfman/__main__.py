@@ -7,9 +7,9 @@ from pyconfman.models.inventory import Inventory
 import pyconfman.models.playbook
 
 try:
-    import tomllib as toml
+    import tomllib as toml  # type: ignore
 except (ImportError, ModuleNotFoundError):
-    import tomli as toml
+    import tomli as toml  # type: ignore
 
 
 if __name__ in ("__main__", "pyconfman.__main__"):
