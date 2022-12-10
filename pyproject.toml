@@ -48,14 +48,12 @@ commands = pylint pyconfman
 [testenv:py{39,310,311}-mypy]
 allowlist_externals =
     mypy
-commands = mypy --exclude tests/* --show-error-context --pretty .
+commands = mypy .
 [testenv:py{39,310,311}-unittest]
 commands =  pytest -vm unit .
 [testenv:py{39,310,311}-integration_test]
 commands = pytest -vm integration .
 """
-[tool.pytest.ini_options]
-markers = ["unit","integration"]
 
 [tool.pylint.main]
 # Add files or directories matching the regular expressions patterns to the
@@ -70,3 +68,11 @@ min-public-methods = 0
 
 [tool.pylint.variables]
 init-import = false
+
+[tool.pytest.ini_options]
+markers = ["unit","integration"]
+
+[tool.mypy]
+exclude = ["tests/*"]
+show_error_context = true
+pretty = true
