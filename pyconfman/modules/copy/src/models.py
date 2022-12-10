@@ -1,3 +1,6 @@
+"""
+the models module for copying resources
+"""
 from __future__ import annotations
 
 import pathlib
@@ -15,6 +18,10 @@ from pyconfman.modules.copy.src.exceptions import (
 
 
 class Source(pyconfman.models.Resource):
+    """
+    Class representing a source resource to be copied from
+    """
+
     def __init__(self, path: pathlib.Path | str):
         super().__init__(path)
         if not self.path.exists():
@@ -26,6 +33,10 @@ class Source(pyconfman.models.Resource):
 
 
 class Destination(pyconfman.models.Resource):
+    """
+    class representing a destination resource to be copied to
+    """
+
     def __init__(self, path: pathlib.Path, create: bool, overwrite: bool):
         super().__init__(path)
         self.create: bool = create
@@ -48,6 +59,10 @@ class Destination(pyconfman.models.Resource):
 
 
 class Copy(pyconfman.models.Action):
+    """
+    class representing the copy action
+    """
+
     def __init__(
         self,
         source: pathlib.Path,
@@ -56,7 +71,8 @@ class Copy(pyconfman.models.Action):
         create: bool,
         overwrite: bool,
         same_file_ok: bool,
-    ):
+    ):  # pylint: disable = too-many-arguments
+        super().__init__()
         self.update = update
         self.same_file_ok = same_file_ok
         self.source: Source = Source(source)
@@ -69,7 +85,9 @@ class Copy(pyconfman.models.Action):
         self.destination: Destination = Destination(destination, create, overwrite)
 
     def copy(self):
-
+        """
+        actually run the copy action
+        """
         if self.source.path.is_dir():
             shutil.copytree(self.source.path, self.destination.path)
         elif self.source.path.is_file():
@@ -80,12 +98,15 @@ class Copy(pyconfman.models.Action):
                     raise
 
     def has_changed(self, destination: Optional[pathlib.Path] = None) -> bool:
+        """
+        query whether the source is different from the destination and therefore maybe
+        has to be copied again
+        :param destination: the destination to check
+        :return: True if the source is different from the destination, False otherwise
+        """
         if destination:
             if self.source.hash == Destination.calculate_hash(
                 destination,
             ):
                 return True
-        # TODO: check if this is ever reached
-        elif self.source.hash == self.destination.hash:
-            return True
         return False

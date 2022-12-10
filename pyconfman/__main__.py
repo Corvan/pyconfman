@@ -1,3 +1,7 @@
+"""
+main module of pyconftest
+made to be run like `python -m pyconftest`
+"""
 from pathlib import Path
 from pyconfman.models.inventory import Inventory
 import pyconfman.models.playbook
@@ -8,8 +12,8 @@ except (ImportError, ModuleNotFoundError):
     import tomli as toml
 
 
-if __name__ == "__main__" or __name__ == "pyconfman.__main__":
-    config = dict()
+if __name__ in ("__main__", "pyconfman.__main__"):
+    config = {}
     config_path = Path("config.toml")
     if config_path.exists():
         with open("config.toml", "rb") as fd:

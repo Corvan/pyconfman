@@ -32,18 +32,19 @@ requires =
 skip_missing_interpreters = true
 envlist =
     py{39,310,311}-{black,lint,mypy,unittest,integration_test}
-
 isolated_build = true
 
 [testenv]
 passenv=PYTHONPATH
 
 [testenv:py{39,310,311}-black]
+allowlist_externals =
+    black
 commands = black --check .
 [testenv:py{39,310,311}-lint]
 allowlist_externals =
     pylint
-commands = pylint --ignore-paths .*/tests/.* pyconfman
+commands = pylint pyconfman
 [testenv:py{39,310,311}-mypy]
 allowlist_externals =
     mypy
@@ -55,3 +56,17 @@ commands = pytest -vm integration .
 """
 [tool.pytest.ini_options]
 markers = ["unit","integration"]
+
+[tool.pylint.main]
+# Add files or directories matching the regular expressions patterns to the
+# ignore-list. The regex matches against paths and can be in Posix or Windows
+# format. Because '\' represents the directory delimiter on Windows systems, it
+# can't be used as an escape character.
+ignore-paths = [".*\\\\tests\\\\.*|.*/tests/.*"]
+
+[tool.pylint.design]
+# Minimum number of public methods for a class (see R0903).
+min-public-methods = 0
+
+[tool.pylint.variables]
+init-import = false

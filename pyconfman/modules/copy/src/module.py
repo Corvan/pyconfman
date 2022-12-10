@@ -1,3 +1,6 @@
+"""
+the actual module to import to use copy-functions
+"""
 from __future__ import annotations
 import pathlib
 
@@ -11,7 +14,7 @@ def local_copy(
     create: bool = True,
     overwrite: bool = False,
     same_file_ok: bool = True,
-):
+):  # pylint: disable = too-many-arguments
     """
     copy a resource (file or directory)
 
