@@ -69,10 +69,10 @@ min-public-methods = 0
 [tool.pylint.variables]
 init-import = false
 
-[tool.pytest.ini_options]
-markers = ["unit","integration"]
-
 [tool.mypy]
 exclude = ["tests/*"]
 show_error_context = true
 pretty = true
+
+[tool.pytest.ini_options]
+markers = ["unit","integration"]
