@@ -4,7 +4,7 @@ host1 = Host(
     name="host1.example.com",
 )
 
-host2 = Host(name="host2.example.com", ip_address="1.2.3.4")
+host2 = Host(name="host2.example.com")
 
 group1 = Group("group1", {host1, host2})
 

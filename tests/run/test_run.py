@@ -14,29 +14,29 @@ def test_run_module():
     assert exec(open(module.__file__).read(), glob, loc) is None
     assert module.test == (
         {
-            "host1": Host(name="host1.example.com", ip_address="0.0.0.0"),
-            "host2": Host(name="host2.example.com", ip_address="1.2.3.4"),
+            "host1": Host(name="host1.example.com"),
+            "host2": Host(name="host2.example.com"),
             "group1": Group(
                 "group1",
                 {
-                    Host(name="host1.example.com", ip_address="0.0.0.0"),
-                    Host(name="host2.example.com", ip_address="1.2.3.4"),
+                    Host(name="host1.example.com"),
+                    Host(name="host2.example.com"),
                 },
             ),
             "group2": Group(
                 "group2",
                 {
-                    Host(name="host1.example.com", ip_address="0.0.0.0"),
+                    Host(name="host1.example.com"),
                     Group(
                         "group1",
                         {
-                            Host(name="host1.example.com", ip_address="0.0.0.0"),
-                            Host(name="host2.example.com", ip_address="1.2.3.4"),
+                            Host(name="host1.example.com"),
+                            Host(name="host2.example.com"),
                         },
                     ),
                 },
             ),
-            "host3": Host(name="Test", ip_address="0.0.0.0"),
+            "host3": Host(name="Test"),
         }
     )
 

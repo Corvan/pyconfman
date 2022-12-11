@@ -17,7 +17,6 @@ class Host:
     """
 
     name: str
-    ip_address: str = "0.0.0.0"
 
     def __hash__(self):
         return self.name.__hash__()
