@@ -1,0 +1,6 @@
+[submodule "fabric"]
+	path = fabric
+	url = git@github.com:fabric/fabric
+[submodule "invoke"]
+	path = invoke
+	url = git@github.com:pyinvoke/invoke.git

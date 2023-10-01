@@ -11,6 +11,10 @@ tox = "^4"
 black = "*"
 pytest = "*"
 mypy = "^1"
+dataclasses_json = "*"
+invoke = { path = "./invoke/", develop = true }
+fabric = { path = "./fabric/", develop = true }
+
 
 [tool.poetry.dev-dependencies]
 pylint = "*"
