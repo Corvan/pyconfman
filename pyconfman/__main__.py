@@ -16,7 +16,7 @@ if __name__ in ("__main__", "pyconfman.__main__"):
     config = {}
     config_path = Path("config.toml")
     if config_path.exists():
-        with open("config.toml", "rb") as fd:
+        with open(config_path, "rb") as fd:
             config = toml.load(fd)["pyconfman"]["main"]
     config.setdefault("inventory", "inventory")
     config.setdefault("playbook", "playbook")
