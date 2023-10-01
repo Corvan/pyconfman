@@ -14,7 +14,10 @@ mypy = "^1"
 
 [tool.poetry.dev-dependencies]
 pylint = "*"
-pytest = "^7.2.0"
+deepdiff = "*"
+tox = "^3"
+black = "*"
+mypy = "^1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -52,11 +55,11 @@ commands = mypy .
 [testenv:py{39,310,311}-unittest]
 allowlist_externals =
     pytest
-commands =  pytest -vm unit .
+commands =  pytest -vvm unit .
 [testenv:py{39,310,311}-integration_test]
 allowlist_externals =
     pytest
-commands = pytest -vm integration .
+commands = pytest -vvm integration .
 """
 
 [tool.pylint.main]
