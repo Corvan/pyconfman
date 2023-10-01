@@ -7,7 +7,6 @@ authors = ["Lars Liedtke <lars@familie-liedtke.net>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 tomli = { version = "^2.0.1", python = "<3.11" }
-tox = "^4"
 black = "*"
 pytest = "*"
 mypy = "^1"
@@ -19,7 +18,7 @@ fabric = { path = "./fabric/", develop = true }
 [tool.poetry.dev-dependencies]
 pylint = "*"
 deepdiff = "*"
-tox = "^3"
+tox = "^4"
 black = "*"
 mypy = "^1"
 
