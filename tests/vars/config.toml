@@ -1,0 +1,3 @@
+[pyconfman.main]
+inventory = "vars_inventory"
+playbook = "vars_playbook"
