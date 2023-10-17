@@ -15,7 +15,7 @@ mypy = "^1"
 [tool.poetry.dev-dependencies]
 pylint = "*"
 deepdiff = "*"
-tox = "^3"
+tox = "^4"
 black = "*"
 mypy = "^1"
 
